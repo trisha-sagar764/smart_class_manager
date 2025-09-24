@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Smart Curriculum System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --dark-blue: #1e40af;
+            --light-blue: #dbeafe;
+            --govt-gold: #d97706;
+            --white: #ffffff;
+            --gray-light: #f8fafc;
+            --gray-border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        .govt-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        /* Translation Controls */
+        .translation-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .translation-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .translation-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .translation-btn.active {
+            background: white;
+            color: var(--primary-blue);
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: flex;
+            min-height: calc(100vh - 150px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+
+        .user-info {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--gray-border);
+            margin-bottom: 15px;
+        }
+
+        .user-info h3 {
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background: var(--light-blue);
+        }
+
+        .nav-item.active {
+            background: var(--light-blue);
+            border-right: 3px solid var(--primary-blue);
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-header h2 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .section-header h3 {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-blue);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .data-table th {
+            background: var(--gray-light);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray-border);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.1);
+        }
+
+        /* Timetable */
+        .timetable {
+            display: grid;
+            grid-template-columns: 100px repeat(5, 1fr);
+            gap: 1px;
+            background: var(--gray-border);
+            border: 1px solid var(--gray-border);
+            margin-top: 20px;
+        }
+
+        .timetable-header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .timetable-cell {
+            background: white;
+            padding: 10px;
+            min-height: 80px;
+        }
+
+        .timetable-slot {
+            background: var(--light-blue);
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+
+        .timetable-time {
+            background: var(--gray-light);
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Today's Classes */
+        .today-classes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .class-card {
+            background: white;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .class-card h4 {
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .class-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        .class-info div {
+            margin-bottom: 5px;
+        }
+
+        /* Footer */
+        .govt-footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            font-size: 0.85rem;
+        }
+
+        .footer-content p {
+            margin-bottom: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-item {
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .translation-controls {
+                justify-content: center;
+            }
+            
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .timetable {
+                grid-template-columns: 80px repeat(5, 1fr);
+                font-size: 0.8rem;
+            }
+            
+            .today-classes {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .timetable {
+                grid-template-columns: 60px repeat(5, 1fr);
+                font-size: 0.7rem;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Government Header -->
+    <header class="govt-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1 id="header-title">Smart Curriculum System</h1>
+                        <p id="header-subtitle">Government of Punjab - School Education</p>
+                    </div>
+                </div>
+                <div class="translation-controls">
+                    <button class="translation-btn active" onclick="changeLanguage('en')">English</button>
+                    <button class="translation-btn" onclick="changeLanguage('pa')">ਪੰਜਾਬੀ</button>
+                    <button class="translation-btn" onclick="changeLanguage('hi')">हिन्दी</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="user-info">
+                <h3 id="teacher-name">Rajesh Kumar</h3>
+                <p id="teacher-subject">Mathematics Department</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="showSection('overview')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span id="nav-overview">Dashboard Overview</span>
+                </li>
+                <li class="nav-item" onclick="showSection('timetable')">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="nav-timetable">My Timetable</span>
+                </li>
+                <li class="nav-item" onclick="showSection('today')">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span id="nav-today">Today's Classes</span>
+                </li>
+                <li class="nav-item" onclick="showSection('attendance')">
+                    <i class="fas fa-user-check"></i>
+                    <span id="nav-attendance">Mark Attendance</span>
+                </li>
+                <li class="nav-item" onclick="showSection('activities')">
+                    <i class="fas fa-tasks"></i>
+                    <span id="nav-activities">Activity Management</span>
+                </li>
+                <li class="nav-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span id="nav-logout">Logout</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h2 id="dashboard-title">Teacher Dashboard</h2>
+                <div id="current-date">Loading date...</div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number">85</div>
+                    <div class="stat-label" id="stat-students">Total Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label" id="stat-classes">Assigned Classes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">28</div>
+                    <div class="stat-label" id="stat-periods">Weekly Periods</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label" id="stat-attendance">Class Attendance</div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview" class="content-section active">
+                <div class="section-header">
+                    <h3 id="overview-title">Teaching Overview</h3>
+                    <button class="btn btn-primary" onclick="generateTeachingReport()">
+                        <i class="fas fa-download"></i> <span id="btn-report">Teaching Report</span>
+                    </button>
+                </div>
+                <p id="overview-desc">Welcome to your teaching dashboard. Here you can manage your classes, timetable, and student activities.</p>
+                
+                <div class="quick-actions">
+                    <h4 id="quick-actions-title">Quick Actions</h4>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="showSection('timetable')">
+                            <i class="fas fa-calendar"></i> <span id="btn-view-timetable">View Timetable</span>
+                        </button>
+                        <button class="btn btn-success" onclick="showSection('today')">
+                            <i class="fas fa-clipboard-list"></i> <span id="btn-today-classes">Today's Classes</span>
+                        </button>
+                        <button class="btn btn-warning" onclick="showSection('attendance')">
+                            <i class="fas fa-user-check"></i> <span id="btn-mark-attendance">Mark Attendance</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timetable Section -->
+            <div id="timetable" class="content-section">
+                <div class="section-header">
+                    <h3 id="timetable-title">My Teaching Timetable</h3>
+                    <div>
+                        <select id="weekSelector" class="form-input" style="width: 200px; margin-right: 10px;" onchange="loadTimetable()">
+                            <option value="current">Current Week</option>
+                            <option value="next">Next Week</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="printTimetable()">
+                            <i class="fas fa-print"></i> <span id="btn-print-timetable">Print Timetable</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="timetableContainer">
+                    <div class="timetable">
+                        <div class="timetable-header">Time</div>
+                        <div class="timetable-header" id="day-mon">Monday</div>
+                        <div class="timetable-header" id="day-tue">Tuesday</div>
+                        <div class="timetable-header" id="day-wed">Wednesday</div>
+                        <div class="timetable-header" id="day-thu">Thursday</div>
+                        <div class="timetable-header" id="day-fri">Friday</div>
+                        
+                        <!-- Period 1 -->
+                        <div class="timetable-time">9:00-9:45</div>
+                        <div class="timetable-cell" id="mon-1"></div>
+                        <div class="timetable-cell" id="tue-1"></div>
+                        <div class="timetable-cell" id="wed-1"></div>
+                        <div class="timetable-cell" id="thu-1"></div>
+                        <div class="timetable-cell" id="fri-1"></div>
+                        
+                        <!-- Period 2 -->
+                        <div class="timetable-time">9:45-10:30</div>
+                        <div class="timetable-cell" id="mon-2"></div>
+                        <div class="timetable-cell" id="tue-2"></div>
+                        <div class="timetable-cell" id="wed-2"></div>
+                        <div class="timetable-cell" id="thu-2"></div>
+                        <div class="timetable-cell" id="fri-2"></div>
+                        
+                        <!-- Period 3 -->
+                        <div class="timetable-time">10:30-11:15</div>
+                        <div class="timetable-cell" id="mon-3"></div>
+                        <div class="timetable-cell" id="tue-3"></div>
+                        <div class="timetable-cell" id="wed-3"></div>
+                        <div class="timetable-cell" id="thu-3"></div>
+                        <div class="timetable-cell" id="fri-3"></div>
+                        
+                        <!-- Period 4 -->
+                        <div class="timetable-time">11:15-12:00</div>
+                        <div class="timetable-cell" id="mon-4"></div>
+                        <div class="timetable-cell" id="tue-4"></div>
+                        <div class="timetable-cell" id="wed-4"></div>
+                        <div class="timetable-cell" id="thu-4"></div>
+                        <div class="timetable-cell" id="fri-4"></div>
+                        
+                        <!-- Lunch Break -->
+                        <div class="timetable-time">12:00-12:45</div>
+                        <div class="timetable-cell" style="background: #fef3c7; text-align: center; font-weight: 600;" id="lunch-break">LUNCH</div>
+                        <div class="timetable-cell" style="background: #fef3c7; text-align: center; font-weight: 600;">LUNCH</div>
+                        <div class="timetable-cell" style="background: #fef3c7; text-align: center; font-weight: 600;">LUNCH</div>
+                        <div class="timetable-cell" style="background: #fef3c7; text-align: center; font-weight: 600;">LUNCH</div>
+                        <div class="timetable-cell" style="background: #fef3c7; text-align: center; font-weight: 600;">LUNCH</div>
+                        
+                        <!-- Period 5 -->
+                        <div class="timetable-time">12:45-1:30</div>
+                        <div class="timetable-cell" id="mon-5"></div>
+                        <div class="timetable-cell" id="tue-5"></div>
+                        <div class="timetable-cell" id="wed-5"></div>
+                        <div class="timetable-cell" id="thu-5"></div>
+                        <div class="timetable-cell" id="fri-5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Classes Section -->
+            <div id="today" class="content-section">
+                <div class="section-header">
+                    <h3 id="today-title">Today's Classes</h3>
+                    <button class="btn btn-primary" onclick="refreshTodayClasses()">
+                        <i class="fas fa-sync-alt"></i> <span id="btn-refresh">Refresh</span>
+                    </button>
+                </div>
+                
+                <div class="today-classes" id="todayClassesContainer">
+                    <!-- Today's classes will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Attendance Section -->
+            <div id="attendance" class="content-section">
+                <div class="section-header">
+                    <h3 id="attendance-title">Mark Student Attendance</h3>
+                    <div>
+                        <select id="attendanceClass" class="form-input" style="width: 200px; margin-right: 10px;" onchange="loadClassAttendance()">
+                            <option value="">Select Class</option>
+                            <option value="10A">Class 10-A</option>
+                            <option value="10B">Class 10-B</option>
+                            <option value="11A">Class 11-A</option>
+                        </select>
+                        <button class="btn btn-success" onclick="saveAttendance()">
+                            <i class="fas fa-save"></i> <span id="btn-save-attendance">Save Attendance</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="attendanceContainer">
+                    <div style="text-align: center; padding: 40px; color: #64748b;">
+                        <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h4 id="select-class-attendance">Please select a class to mark attendance</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Management Section -->
+            <div id="activities" class="content-section">
+                <div class="section-header">
+                    <h3 id="activities-title">Activity Management</h3>
+                    <button class="btn btn-primary" onclick="openActivityModal()">
+                        <i class="fas fa-plus"></i> <span id="btn-new-activity">New Activity</span>
+                    </button>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" id="label-activity-class">Select Class</label>
+                        <select id="activityClass" class="form-input" onchange="loadClassActivities()">
+                            <option value="">Select Class</option>
+                            <option value="10A">Class 10-A</option>
+                            <option value="10B">Class 10-B</option>
+                            <option value="11A">Class 11-A</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" id="label-activity-type">Activity Type</label>
+                        <select id="activityType" class="form-input">
+                            <option value="">All Activities</option>
+                            <option value="homework">Homework</option>
+                            <option value="project">Project</option>
+                            <option value="quiz">Quiz</option>
+                            <option value="revision">Revision</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="activitiesContainer">
+                    <div style="text-align: center; padding: 40px; color: #64748b;">
+                        <i class="fas fa-tasks" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h4 id="no-activities">No activities found. Create a new activity or select a different class.</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="govt-footer">
+        <div class="container">
+            <div class="footer-content">
+                <p id="footer-text">© 2024 Government of Punjab, School Education Department. All rights reserved.</p>
+                <p id="footer-version">Smart Curriculum System v2.1 | Teacher Dashboard</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Complete Translation Data
+        const translations = {
+            en: {
+                // Header
+                "header-title": "Smart Curriculum System",
+                "header-subtitle": "Government of Punjab - School Education",
+                
+                // User Info
+                "teacher-name": "Rajesh Kumar",
+                "teacher-subject": "Mathematics Department",
+                
+                // Navigation
+                "nav-overview": "Dashboard Overview",
+                "nav-timetable": "My Timetable",
+                "nav-today": "Today's Classes",
+                "nav-attendance": "Mark Attendance",
+                "nav-activities": "Activity Management",
+                "nav-logout": "Logout",
+                
+                // Dashboard Header
+                "dashboard-title": "Teacher Dashboard",
+                
+                // Statistics
+                "stat-students": "Total Students",
+                "stat-classes": "Assigned Classes",
+                "stat-periods": "Weekly Periods",
+                "stat-attendance": "Class Attendance",
+                
+                // Overview Section
+                "overview-title": "Teaching Overview",
+                "overview-desc": "Welcome to your teaching dashboard. Here you can manage your classes, timetable, and student activities.",
+                "quick-actions-title": "Quick Actions",
+                "btn-report": "Teaching Report",
+                "btn-view-timetable": "View Timetable",
+                "btn-today-classes": "Today's Classes",
+                "btn-mark-attendance": "Mark Attendance",
+                
+                // Timetable Section
+                "timetable-title": "My Teaching Timetable",
+                "btn-print-timetable": "Print Timetable",
+                "day-mon": "Monday",
+                "day-tue": "Tuesday",
+                "day-wed": "Wednesday",
+                "day-thu": "Thursday",
+                "day-fri": "Friday",
+                "lunch-break": "LUNCH",
+                
+                // Today's Classes Section
+                "today-title": "Today's Classes",
+                "btn-refresh": "Refresh",
+                
+                // Attendance Section
+                "attendance-title": "Mark Student Attendance",
+                "btn-save-attendance": "Save Attendance",
+                "select-class-attendance": "Please select a class to mark attendance",
+                
+                // Activity Management Section
+                "activities-title": "Activity Management",
+                "btn-new-activity": "New Activity",
+                "label-activity-class": "Select Class",
+                "label-activity-type": "Activity Type",
+                "no-activities": "No activities found. Create a new activity or select a different class.",
+                
+                // Footer
+                "footer-text": "© 2024 Government of Punjab, School Education Department. All rights reserved.",
+                "footer-version": "Smart Curriculum System v2.1 | Teacher Dashboard",
+                
+                // Dynamic content
+                "class-time": "Time",
+                "class-room": "Room",
+                "class-topic": "Topic",
+                "class-students": "Students",
+                "start-class": "Start Class",
+                "class-attendance": "Attendance"
+            },
+            pa: {
+                // Header
+                "header-title": "ਸਮਾਰਟ ਪਾਠਕ੍ਰਮ ਸਿਸਟਮ",
+                "header-subtitle": "ਪੰਜਾਬ ਸਰਕਾਰ - ਸਕੂਲ ਸਿੱਖਿਆ",
+                
+                // User Info
+                "teacher-name": "ਰਾਜੇਸ਼ ਕੁਮਾਰ",
+                "teacher-subject": "ਗਣਿਤ ਵਿਭਾਗ",
+                
+                // Navigation
+                "nav-overview": "ਡੈਸ਼ਬੋਰਡ ਝਲਕ",
+                "nav-timetable": "ਮੇਰੀ ਸਮਾਂ ਸਾਰਣੀ",
+                "nav-today": "ਅੱਜ ਦੀਆਂ ਕਲਾਸਾਂ",
+                "nav-attendance": "ਹਾਜ਼ਰੀ ਦਰਜ ਕਰੋ",
+                "nav-activities": "ਗਤੀਵਿਧੀ ਪ੍ਰਬੰਧਨ",
+                "nav-logout": "ਲੌਗਆਉਟ",
+                
+                // Dashboard Header
+                "dashboard-title": "ਅਧਿਆਪਕ ਡੈਸ਼ਬੋਰਡ",
+                
+                // Statistics
+                "stat-students": "ਕੁਲ ਵਿਦਿਆਰਥੀ",
+                "stat-classes": "ਸੌਂਪੀਆਂ ਗਈਆਂ ਕਲਾਸਾਂ",
+                "stat-periods": "ਹਫ਼ਤਾਵਾਰੀ ਪੀਰੀਅਡ",
+                "stat-attendance": "ਕਲਾਸ ਹਾਜ਼ਰੀ",
+                
+                // Overview Section
+                "overview-title": "ਅਧਿਆਪਨ ਝਲਕ",
+                "overview-desc": "ਤੁਹਾਡੇ ਅਧਿਆਪਨ ਡੈਸ਼ਬੋਰਡ ਵਿੱਚ ਜੀ ਆਇਆਂ ਨੂੰ। ਇੱਥੇ ਤੁਸੀਂ ਆਪਣੀਆਂ ਕਲਾਸਾਂ, ਸਮਾਂ ਸਾਰਣੀ ਅਤੇ ਵਿਦਿਆਰਥੀ ਗਤੀਵਿਧੀਆਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰ ਸਕਦੇ ਹੋ।",
+                "quick-actions-title": "ਤੁਰੰਤ ਕਾਰਵਾਈਆਂ",
+                "btn-report": "ਅਧਿਆਪਨ ਰਿਪੋਰਟ",
+                "btn-view-timetable": "ਸਮਾਂ ਸਾਰਣੀ ਦੇਖੋ",
+                "btn-today-classes": "ਅੱਜ ਦੀਆਂ ਕਲਾਸਾਂ",
+                "btn-mark-attendance": "ਹਾਜ਼ਰੀ ਦਰਜ ਕਰੋ",
+                
+                // Timetable Section
+                "timetable-title": "ਮੇਰੀ ਅਧਿਆਪਨ ਸਮਾਂ ਸਾਰਣੀ",
+                "btn-print-timetable": "ਸਮਾਂ ਸਾਰਣੀ ਪ੍ਰਿੰਟ ਕਰੋ",
+                "day-mon": "ਸੋਮਵਾਰ",
+                "day-tue": "ਮੰਗਲਵਾਰ",
+                "day-wed": "ਬੁੱਧਵਾਰ",
+                "day-thu": "ਵੀਰਵਾਰ",
+                "day-fri": "ਸ਼ੁੱਕਰਵਾਰ",
+                "lunch-break": "ਦੁਪਹਿਰ ਦਾ ਖਾਣਾ",
+                
+                // Today's Classes Section
+                "today-title": "ਅੱਜ ਦੀਆਂ ਕਲਾਸਾਂ",
+                "btn-refresh": "ਤਾਜ਼ਾ ਕਰੋ",
+                
+                // Attendance Section
+                "attendance-title": "ਵਿਦਿਆਰਥੀ ਹਾਜ਼ਰੀ ਦਰਜ ਕਰੋ",
+                "btn-save-attendance": "ਹਾਜ਼ਰੀ ਸੰਭਾਲੋ",
+                "select-class-attendance": "ਹਾਜ਼ਰੀ ਦਰਜ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਕਲਾਸ ਚੁਣੋ",
+                
+                // Activity Management Section
+                "activities-title": "ਗਤੀਵਿਧੀ ਪ੍ਰਬੰਧਨ",
+                "btn-new-activity": "ਨਵੀਂ ਗਤੀਵਿਧੀ",
+                "label-activity-class": "ਕਲਾਸ ਚੁਣੋ",
+                "label-activity-type": "ਗਤੀਵਿਧੀ ਕਿਸਮ",
+                "no-activities": "ਕੋਈ ਗਤੀਵਿਧੀਆਂ ਨਹੀਂ ਮਿਲੀਆਂ। ਨਵੀਂ ਗਤੀਵਿਧੀ ਬਣਾਓ ਜਾਂ ਵੱਖਰੀ ਕਲਾਸ ਚੁਣੋ।",
+                
+                // Footer
+                "footer-text": "© 2024 ਪੰਜਾਬ ਸਰਕਾਰ, ਸਕੂਲ ਸਿੱਖਿਆ ਵਿਭਾਗ। ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ।",
+                "footer-version": "ਸਮਾਰਟ ਪਾਠਕ੍ਰਮ ਸਿਸਟਮ v2.1 | ਅਧਿਆਪਕ ਡੈਸ਼ਬੋਰਡ",
+                
+                // Dynamic content
+                "class-time": "ਸਮਾਂ",
+                "class-room": "ਕਮਰਾ",
+                "class-topic": "ਵਿਸ਼ਾ",
+                "class-students": "ਵਿਦਿਆਰਥੀ",
+                "start-class": "ਕਲਾਸ ਸ਼ੁਰੂ ਕਰੋ",
+                "class-attendance": "ਹਾਜ਼ਰੀ"
+            },
+            hi: {
+                // Header
+                "header-title": "स्मार्ट पाठ्यक्रम प्रणाली",
+                "header-subtitle": "पंजाब सरकार - स्कूल शिक्षा",
+                
+                // User Info
+                "teacher-name": "राजेश कुमार",
+                "teacher-subject": "गणित विभाग",
+                
+                // Navigation
+                "nav-overview": "डैशबोर्ड अवलोकन",
+                "nav-timetable": "मेरा समय सारणी",
+                "nav-today": "आज की कक्षाएं",
+                "nav-attendance": "उपस्थिति दर्ज करें",
+                "nav-activities": "गतिविधि प्रबंधन",
+                "nav-logout": "लॉगआउट",
+                
+                // Dashboard Header
+                "dashboard-title": "शिक्षक डैशबोर्ड",
+                
+                // Statistics
+                "stat-students": "कुल छात्र",
+                "stat-classes": "असाइन कक्षाएं",
+                "stat-periods": "साप्ताहिक अवधि",
+                "stat-attendance": "कक्षा उपस्थिति",
+                
+                // Overview Section
+                "overview-title": "शिक्षण अवलोकन",
+                "overview-desc": "आपके शिक्षण डैशबोर्ड में आपका स्वागत है। यहां आप अपनी कक्षाओं, समय सारणी और छात्र गतिविधियों का प्रबंधन कर सकते हैं।",
+                "quick-actions-title": "त्वरित कार्य",
+                "btn-report": "शिक्षण रिपोर्ट",
+                "btn-view-timetable": "समय सारणी देखें",
+                "btn-today-classes": "आज की कक्षाएं",
+                "btn-mark-attendance": "उपस्थिति दर्ज करें",
+                
+                // Timetable Section
+                "timetable-title": "मेरी शिक्षण समय सारणी",
+                "btn-print-timetable": "समय सारणी प्रिंट करें",
+                "day-mon": "सोमवार",
+                "day-tue": "मंगलवार",
+                "day-wed": "बुधवार",
+                "day-thu": "गुरुवार",
+                "day-fri": "शुक्रवार",
+                "lunch-break": "लंच",
+                
+                // Today's Classes Section
+                "today-title": "आज की कक्षाएं",
+                "btn-refresh": "रिफ्रेश करें",
+                
+                // Attendance Section
+                "attendance-title": "छात्र उपस्थिति दर्ज करें",
+                "btn-save-attendance": "उपस्थिति सहेजें",
+                "select-class-attendance": "उपस्थिति दर्ज करने के लिए कृपया एक कक्षा चुनें",
+                
+                // Activity Management Section
+                "activities-title": "गतिविधि प्रबंधन",
+                "btn-new-activity": "नई गतिविधि",
+                "label-activity-class": "कक्षा चुनें",
+                "label-activity-type": "गतिविधि प्रकार",
+                "no-activities": "कोई गतिविधियां नहीं मिलीं। नई गतिविधि बनाएं या अलग कक्षा चुनें।",
+                
+                // Footer
+                "footer-text": "© 2024 पंजाब सरकार, स्कूल शिक्षा विभाग। सर्वाधिकार सुरक्षित।",
+                "footer-version": "स्मार्ट पाठ्यक्रम प्रणाली v2.1 | शिक्षक डैशबोर्ड",
+                
+                // Dynamic content
+                "class-time": "समय",
+                "class-room": "कक्षा",
+                "class-topic": "विषय",
+                "class-students": "छात्र",
+                "start-class": "कक्षा शुरू करें",
+                "class-attendance": "उपस्थिति"
+            }
+        };
+
+        // Current language
+        let currentLanguage = 'en';
+
+        // Change language function
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active button
+            document.querySelectorAll('.translation-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Apply translations
+            applyTranslations();
+            
+            // Reload dynamic content with new language
+            loadTodayClasses();
+            loadTimetable();
+        }
+
+        // Apply translations to the page
+        function applyTranslations() {
+            const translation = translations[currentLanguage];
+            
+            // Update all elements with translations
+            for (const key in translation) {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = translation[key];
+                }
+            }
+            
+            // Update current date with proper locale
+            updateCurrentDate();
+        }
+
+        // Show section function
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and activate the corresponding nav item
+            const navItems = document.querySelectorAll('.nav-item');
+            for (let i = 0; i < navItems.length; i++) {
+                if (navItems[i].getAttribute('onclick')?.includes(sectionId)) {
+                    navItems[i].classList.add('active');
+                    break;
+                }
+            }
+            
+            // Load section-specific data
+            if (sectionId === 'today') {
+                loadTodayClasses();
+            } else if (sectionId === 'timetable') {
+                loadTimetable();
+            }
+        }
+
+        // Logout function
+        function logout() {
+            const messages = {
+                en: "Are you sure you want to logout?",
+                pa: "ਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਲੌਗਆਉਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?",
+                hi: "क्या आप वाकई लॉगआउट करना चाहते हैं?"
+            };
+            
+            if (confirm(messages[currentLanguage])) {
+                window.location.href = "index.html";
+            }
+        }
+
+        // Update current date with proper locale
+        function updateCurrentDate() {
+            const now = new Date();
+            const locales = {
+                en: 'en-IN',
+                pa: 'pa-IN',
+                hi: 'hi-IN'
+            };
+            
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+            };
+            
+            document.getElementById('current-date').textContent = 
+                now.toLocaleDateString(locales[currentLanguage], options);
+        }
+
+        // Load timetable data
+        function loadTimetable() {
+            // Sample timetable data (would come from database in real app)
+            const timetableData = {
+                'mon-1': 'Mathematics - 10A (Room 101)',
+                'mon-2': 'Mathematics - 10B (Room 102)',
+                'tue-1': 'Mathematics - 10A (Room 101)',
+                'tue-3': 'Mathematics - 11A (Room 103)',
+                'wed-2': 'Mathematics - 10B (Room 102)',
+                'thu-1': 'Mathematics - 10A (Room 101)',
+                'thu-4': 'Mathematics - 11A (Room 103)',
+                'fri-3': 'Mathematics - 10B (Room 102)'
+            };
+            
+            // Clear all timetable cells
+            for (let day = 1; day <= 5; day++) {
+                for (let period = 1; period <= 5; period++) {
+                    const cellId = `${['mon','tue','wed','thu','fri'][day-1]}-${period}`;
+                    const cell = document.getElementById(cellId);
+                    if (cell) {
+                        cell.innerHTML = '';
+                    }
+                }
+            }
+            
+            // Fill timetable with data
+            for (const cellId in timetableData) {
+                const cell = document.getElementById(cellId);
+                if (cell) {
+                    cell.innerHTML = `<div class="timetable-slot">${timetableData[cellId]}</div>`;
+                }
+            }
+        }
+
+        // Load today's classes with proper translations
+        function loadTodayClasses() {
+            const today = new Date().getDay(); // 0=Sunday, 1=Monday, etc.
+            const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+            const todayDay = days[today];
+            
+            // Sample today's classes data
+            const todayClasses = [
+                {
+                    class: '10-A Mathematics',
+                    time: '9:00 - 9:45 AM',
+                    room: 'Room 101',
+                    topic: 'Algebra: Quadratic Equations',
+                    students: 35
+                },
+                {
+                    class: '10-B Mathematics',
+                    time: '9:45 - 10:30 AM',
+                    room: 'Room 102',
+                    topic: 'Geometry: Triangles',
+                    students: 32
+                },
+                {
+                    class: '11-A Mathematics',
+                    time: '11:15 - 12:00 PM',
+                    room: 'Room 103',
+                    topic: 'Calculus: Derivatives',
+                    students: 28
+                }
+            ];
+            
+            const container = document.getElementById('todayClassesContainer');
+            container.innerHTML = '';
+            
+            const translation = translations[currentLanguage];
+            
+            todayClasses.forEach(cls => {
+                const classCard = document.createElement('div');
+                classCard.className = 'class-card';
+                classCard.innerHTML = `
+                    <h4>${cls.class}</h4>
+                    <div class="class-info">
+                        <div><strong>${translation['class-time']}:</strong> ${cls.time}</div>
+                        <div><strong>${translation['class-room']}:</strong> ${cls.room}</div>
+                        <div><strong>${translation['class-topic']}:</strong> ${cls.topic}</div>
+                        <div><strong>${translation['class-students']}:</strong> ${cls.students}</div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <button class="btn btn-primary btn-sm" onclick="startClass('${cls.class}')">
+                            <i class="fas fa-play"></i> ${translation['start-class']}
+                        </button>
+                        <button class="btn btn-warning btn-sm" onclick="markClassAttendance('${cls.class}')">
+                            <i class="fas fa-user-check"></i> ${translation['class-attendance']}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(classCard);
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            applyTranslations();
+            updateCurrentDate();
+            loadTimetable();
+            loadTodayClasses();
+        });
+
+        // Placeholder functions for various actions
+        function generateTeachingReport() {
+            const messages = {
+                en: "Teaching report generation functionality would execute here",
+                pa: "ਅਧਿਆਪਨ ਰਿਪੋਰਟ ਜਨਰੇਸ਼ਨ ਫੰਕਸ਼ਨਲਿਟੀ ਇੱਥੇ ਚਲੇਗੀ",
+                hi: "शिक्षण रिपोर्ट जनरेशन फंक्शनलिटी यहां एक्जीक्यूट होगी"
+            };
+            alert(messages[currentLanguage]);
+        }
+
+        function printTimetable() {
+            const messages = {
+                en: "Timetable printing functionality would execute here",
+                pa: "ਸਮਾਂ ਸਾਰਣੀ ਪ੍ਰਿੰਟਿੰਗ ਫੰਕਸ਼ਨਲਿਟੀ ਇੱਥੇ ਚਲੇਗੀ",
+                hi: "समय सारणी प्रिंटिंग फंक्शनलिटी यहां एक्जीक्यूट होगी"
+            };
+            alert(messages[currentLanguage]);
+        }
+
+        function refreshTodayClasses() {
+            loadTodayClasses();
+            const messages = {
+                en: "Today's classes refreshed!",
+                pa: "ਅੱਜ ਦੀਆਂ ਕਲਾਸਾਂ ਤਾਜ਼ਾ ਕੀਤੀਆਂ ਗਈਆਂ!",
+                hi: "आज की कक्षाएं रिफ्रेश की गईं!"
+            };
+            alert(messages[currentLanguage]);
+        }
+
+        function loadClassAttendance() {
+            const selectedClass = document.getElementById('attendanceClass').value;
+            if (selectedClass) {
+                const translation = translations[currentLanguage];
+                document.getElementById('attendanceContainer').innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <h4>${translation['attendance-title']} - ${selectedClass}</h4>
+                        <p>${translation['select-class-attendance']}</p>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="markAllPresent()">Mark All Present</button>
+                            <button class="btn btn-warning" onclick="markAllAbsent()">Mark All Absent</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function saveAttendance() {
+            const messages = {
+                en: "Attendance saved successfully!",
+                pa: "ਹਾਜ਼ਰੀ ਸਫਲਤਾਪੂਰਵਕ ਸੰਭਾਲੀ ਗਈ!",
+                hi: "उपस्थिति सफलतापूर्वक सहेजी गई!"
+            };
+            alert(messages[currentLanguage]);
+        }
+
+        function openActivityModal() {
+            const messages = {
+                en: "New activity creation modal would open here",
+                pa: "ਨਵੀਂ ਗਤੀਵਿਧੀ ਬਣਾਉਣ ਦਾ ਮੋਡਲ ਇੱਥੇ ਖੁੱਲੇਗਾ",
+                hi: "नई गतिविधि क्रिएशन मोडल यहां खुलेगा"
+            };
+            alert(messages[currentLanguage]);
+        }
+
+        function loadClassActivities() {
+            const messages = {
+                en: "Loading activities for selected class...",
+                pa: "ਚੁਣੀ ਗਈ ਕਲਾਸ ਲਈ ਗਤੀਵਿਧੀਆਂ ਲੋਡ ਕੀਤੀਆਂ ਜਾ ਰਹੀਆਂ ਹਨ...",
+                hi: "चयनित कक्षा के लिए गतिविधियां लोड की जा रही हैं..."
+            };
+            alert(messages[currentLanguage]);
+        }
+
+        function startClass(className) {
+            const messages = {
+                en: `Starting class: ${className}`,
+                pa: `ਕਲਾਸ ਸ਼ੁਰੂ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ: ${className}`,
+                hi: `कक्षा शुरू की जा रही है: ${className}`
+            };
+            alert(messages[currentLanguage]);
+        }
+
+        function markClassAttendance(className) {
+            const messages = {
+                en: `Marking attendance for: ${className}`,
+                pa: `ਹਾਜ਼ਰੀ ਦਰਜ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ: ${className}`,
+                hi: `उपस्थिति दर्ज की जा रही है: ${className}`
+            };
+            alert(messages[currentLanguage]);
+            showSection('attendance');
+        }
+
+        function markAllPresent() {
+            const messages = {
+                en: "All students marked as present!",
+                pa: "ਸਾਰੇ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਹਾਜ਼ਰ ਦਰਜ ਕੀਤਾ ਗਿਆ!",
+                hi: "सभी छात्रों को उपस्थित चिह्नित किया गया!"
+            };
+            alert(messages[currentLanguage]);
+        }
+
+        function markAllAbsent() {
+            const messages = {
+                en: "All students marked as absent!",
+                pa: "ਸਾਰੇ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਗੈਰਹਾਜ਼ਰ ਦਰਜ ਕੀਤਾ ਗਿਆ!",
+                hi: "सभी छात्रों को अनुपस्थित चिह्नित किया गया!"
+            };
+            alert(messages[currentLanguage]);
+        }
+    </script>
+</body>
+</html>
