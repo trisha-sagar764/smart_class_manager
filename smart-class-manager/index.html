@@ -207,7 +207,6 @@
     justify-content: center;
     gap: 20px;
     flex-wrap: nowrap;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             margin-bottom: 30px;
         }
 
@@ -343,8 +342,8 @@
                     <h3 id="admin-title">Administrator Login</h3>
                     <p id="admin-desc">System management and oversight</p>
                     <button class="login-btn" onclick="login('admin')" id="admin-btn">
-                        <i class="fas fa-sign-in-alt"></i> Login as Administrator
-                    </button>
+    <i class="fas fa-sign-in-alt"></i> Login as Administrator
+</button>
                 </div>
 
                 <div class="login-card">
@@ -357,6 +356,17 @@
                         <i class="fas fa-sign-in-alt"></i> Login as Teacher
                     </button>
                 </div>
+                <!-- Add this button below the existing teacher login button -->
+<div class="login-card">
+    <div class="login-icon">
+        <i class="fas fa-fingerprint"></i>
+    </div>
+    <h3 id="attendance-title">Mark Attendance</h3>
+    <p id="attendance-desc">Daily attendance for teaching staff</p>
+    <button class="login-btn" onclick="markAttendance()" id="attendance-btn" style="background: var(--govt-gold);">
+        <i class="fas fa-calendar-check"></i> Mark Today's Attendance
+    </button>
+</div>
             </div>
         </div>
     </main>
@@ -389,7 +399,7 @@
                 teacherTitle: "Teacher Login",
                 teacherDesc: "Attendance and curriculum management",
                 teacherBtn: "Login as Teacher",
-                footerText: "© 2024 Government of Punjab, School Education Department. All rights reserved."
+                footerText: "© 2026 Government of Punjab, School Education Department. All rights reserved."
             },
             pa: {
                 headerTitle: "ਸਮਾਰਟ ਪਾਠਕ੍ਰਮ ਸਿਸਟਮ",
@@ -406,7 +416,7 @@
                 teacherTitle: "ਅਧਿਆਪਕ ਲੌਗਇਨ",
                 teacherDesc: "ਹਾਜ਼ਰੀ ਅਤੇ ਪਾਠਕ੍ਰਮ ਪ੍ਰਬੰਧਨ",
                 teacherBtn: "ਅਧਿਆਪਕ ਵਜੋਂ ਲੌਗਇਨ ਕਰੋ",
-                footerText: "© 2024 ਪੰਜਾਬ ਸਰਕਾਰ, ਸਕੂਲ ਸਿੱਖਿਆ ਵਿਭਾਗ। ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ।"
+                footerText: "© 2026 ਪੰਜਾਬ ਸਰਕਾਰ, ਸਕੂਲ ਸਿੱਖਿਆ ਵਿਭਾਗ। ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ।"
             },
             hi: {
                 headerTitle: "स्मार्ट पाठ्यक्रम प्रणाली",
@@ -423,7 +433,7 @@
                 teacherTitle: "शिक्षक लॉगिन",
                 teacherDesc: "उपस्थिति और पाठ्यक्रम प्रबंधन",
                 teacherBtn: "शिक्षक के रूप में लॉगिन करें",
-                footerText: "© 2024 पंजाब सरकार, स्कूल शिक्षा विभाग। सर्वाधिकार सुरक्षित।"
+                footerText: "© 2026 पंजाब सरकार, स्कूल शिक्षा विभाग। सर्वाधिकार सुरक्षित।"
             }
         };
 
@@ -464,40 +474,84 @@
             document.getElementById('teacher-btn').innerHTML = `<i class="fas fa-sign-in-alt"></i> ${translation.teacherBtn}`;
             document.getElementById('footer-text').textContent = translation.footerText;
         }
-
         // Login function
-        function login(userType) {
-            // In a real application, this would redirect to the actual login page
-            // For this demo, we'll show a message and redirect to a dashboard simulation
-            
-            const messages = {
-                en: {
-                    admin: "Redirecting to Administrator Dashboard...",
-                    teacher: "Redirecting to Teacher Dashboard..."
-                },
-                pa: {
-                    admin: "ਪ੍ਰਸ਼ਾਸਕ ਡੈਸ਼ਬੋਰਡ ਵੱਲ ਪੁਨਰ ਨਿਰਦੇਸ਼ਿਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
-                    teacher: "ਅਧਿਆਪਕ ਡੈਸ਼ਬੋਰਡ ਵੱਲ ਪੁਨਰ ਨਿਰਦੇਸ਼ਿਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
-                },
-                hi: {
-                    admin: "प्रशासक डैशबोर्ड पर पुनर्निर्देशित किया जा रहा है...",
-                    teacher: "शिक्षक डैशबोर्ड पर पुनर्निर्देशित किया जा रहा है..."
-                }
-            };
-            
-            alert(messages[currentLanguage][userType]);
-            
-            // Simulate redirection (in a real app, this would be window.location.href)
-            setTimeout(() => {
-                if (userType === 'admin') {
-                    // Redirect to admin dashboard
-                    window.location.href = "admin-dashboard.html";
-                } else {
-                    // Redirect to teacher dashboard
-                    window.location.href = "teacher-dashboard.html";
-                }
-            }, 1000);
+    function login(userType) {
+    if (userType === 'admin') {
+        // Admin login - redirect to admin login page
+        const messages = {
+            en: "Redirecting to Administrator Login...",
+            pa: "ਪ੍ਰਸ਼ਾਸਕ ਲੌਗਇਨ ਵੱਲ ਪੁਨਰ ਨਿਰਦੇਸ਼ਿਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+            hi: "प्रशासक लॉगिन पर पुनर्निर्देशित किया जा रहा है..."
+        };
+        
+        alert(messages[currentLanguage]);
+        setTimeout(() => {
+            window.location.href = "admin-login.html";
+        }, 1000);
+        
+    } else if (userType === 'teacher') {
+        // Teacher login logic
+        const messages = {
+            en: {
+                redirect: "Redirecting to Teacher Login...",
+                options: "Choose your login method"
+            },
+            pa: {
+                redirect: "ਅਧਿਆਪਕ ਲੌਗਇਨ ਵੱਲ ਪੁਨਰ ਨਿਰਦੇਸ਼ਿਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+                options: "ਆਪਣਾ ਲੌਗਇਨ ਤਰੀਕਾ ਚੁਣੋ"
+            },
+            hi: {
+                redirect: "शिक्षक लॉगिन पर पुनर्निर्देशित किया जा रहा है...",
+                options: "अपना लॉगिन विधि चुनें"
+            }
+        };
+    }
+}
+
+
+// Function to show teacher login options
+function showTeacherLoginOptions(language) {
+    const options = {
+        en: {
+            title: "Teacher Login Options",
+            dashboard: "Access Teacher Dashboard",
+            attendance: "Mark Daily Attendance",
+            cancel: "Cancel"
+        },
+        pa: {
+            title: "ਅਧਿਆਪਕ ਲੌਗਇਨ ਵਿਕਲਪ",
+            dashboard: "ਅਧਿਆਪਕ ਡੈਸ਼ਬੋਰਡ ਤੱਕ ਪਹੁੰਚ",
+            attendance: "ਦੈਨਿਕ ਹਾਜ਼ਰੀ ਦਰਜ ਕਰੋ",
+            cancel: "ਰੱਦ ਕਰੋ"
+        },
+        hi: {
+            title: "शिक्षक लॉगिन विकल्प",
+            dashboard: "शिक्षक डैशबोर्ड एक्सेस करें",
+            attendance: "दैनिक उपस्थिति दर्ज करें",
+            cancel: "रद्द करें"
         }
+    };
+    
+    const optionText = options[language];
+            alert(messages[currentLanguage][userType]);
+                    // Mark attendance function
+function markAttendance() {
+    // In a real application, this would redirect to the attendance page
+    // For this demo, we'll show a message and redirect
+    const messages = {
+        en: "Redirecting to Attendance System...",
+        pa: "ਹਾਜ਼ਰੀ ਸਿਸਟਮ ਵੱਲ ਪੁਨਰ ਨਿਰਦੇਸ਼ਿਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+        hi: "उपस्थिति प्रणाली पर पुनर्निर्देशित किया जा रहा है..."
+    };
+    
+    alert(messages[currentLanguage]);
+    
+    // Redirect to attendance page
+    setTimeout(() => {
+        window.location.href = "teacher-attendance.html";
+    }, 1000);
+}
+}
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
